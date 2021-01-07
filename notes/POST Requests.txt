@@ -1,0 +1,10 @@
+POST REQUESTS -  Damien
+
+:: Whiteboard
+POST /notes 
+  {text: "My new note"}
+
+POST / notes/123/comments
+  {comment: "cool"}
+
+  persisting data.... see server
