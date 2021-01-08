@@ -3,15 +3,23 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import mongoose from 'mongoose'
 
-const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/notes"
+const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/post-codealong"
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
 mongoose.Promise = Promise
 
-const Note = mongoose.model('Note', {
-  text: String, 
+const Task = mongoose.model('Task', {
+  text: {
+    type: String,
+    required: true,
+    minLength: 5
+  }, 
+  complete: {
+    type: Boolean,
+    default: false
+  }, 
   createdAt: {
-    type: Date, 
-    default: () => new Date()
+    type: Date,
+    default: Date.now
   }
 })
 
@@ -31,13 +39,10 @@ app.get('/', (req, res) => {
   res.send('Hello world')
 })
 
-app.post('/notes', async (req, res) => {
-  const note = new Note({ text: req.body.text })
-  // if you have many lines as 35 you may destructure like this:
-  // const { text } = req.body
-  // const note = new Note({ text })
-  await note.save()
-  res.json(note)
+// If tasks exist in the db, they will be returned as an array through this endpoint as json
+app.get('/tasks', async (req,res) => {
+  const tasks = await Task.find().sort({createdAt: 'desc'}).limit(20).exec()
+  res.json(tasks)
 })
 
 // Start the server
