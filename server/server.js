@@ -10,7 +10,7 @@ const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost/project-mongo'
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
 mongoose.Promise = Promise
 
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 8081
 const app = express()
 
 app.use(cors())
