@@ -2,3 +2,10 @@ Post Requests & Mongo - Van
 
 CODEALONG
 See: server.js
+
+Here we've created something where we can add information and get that information. 
+
+next steps could be:
+how to add multiple tasks at once
+or
+how to edit a single task

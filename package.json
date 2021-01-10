@@ -17,7 +17,7 @@
     "check": "*",
     "cors": "*",
     "express": "*",
-    "mongoose": "*",
+    "mongoose": "^5.11.11",
     "nodemon": "*"
   },
   "devDependencies": {
