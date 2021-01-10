@@ -1,0 +1,6 @@
+Errors & Validation - Van 
+
+:: Validations in Mongoose
+  > try catch form
+  another method would be 
+  > promises

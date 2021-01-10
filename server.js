@@ -7,26 +7,28 @@ const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/post-codealong"
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
 mongoose.Promise = Promise
 
-const Task = mongoose.model('Task', {
-  text: {
+// Create model for mongo db
+const Person = mongoose.model('Person', {
+  name: {
     type: String,
     required: true,
-    minlength: 5
+    minlength: 2,
+    maxlength: 500
   }, 
-  complete: {
-    type: Boolean,
-    default: false
+  height: {
+    type: Number,
+    required: true,
+    min: 5
   }, 
-  createdAt: {
+  birthdate: {
     type: Date,
     default: Date.now
   }
 })
 
-// Defines the port the app will run on. Defaults to 8080, but can be 
-// overridden when starting the server. For example:
-//
-//   PORT=9000 npm start
+new Person({name: "Peggy", height: 150}).save()
+
+// Defines the port the app will run on. Defaults to 8080.
 const port = process.env.PORT || 8080
 const app = express()
 
@@ -39,25 +41,30 @@ app.get('/', (req, res) => {
   res.send('peggy, get to work')
 })
 
-// If tasks exist in the db, they will be returned as an array through this endpoint as json
-app.get('/tasks', async (req,res) => {
-  const tasks = await Task.find().sort({createdAt: 'desc'}).limit(20).exec()
-  res.json(tasks)
-})
+app.post('/people', async (req, res) => {
+  // // Promises
+  // new Person(req.body).save()
+  // .then((person) => {
+  //   res.status(200).json(person)
+  // })
+  // .catch((err) => {
+  //   res.status(400).json({message:'Could not save person', errors: err.errors})
+  // })
 
-app.post('/tasks', async(req, res) => {
-  // Retrieve the info sent by the client to our API endpt.
-  const {text, complete} = req.body
-
-  // Use our mongoose model to create the database entry
-  const task = new Task({text, complete})
-
+  // Try catch form
   try {
-    // success case
-    const savedTask = await task.save()
-    res.status(201).json(savedTask)
-  } catch (err){
-    res.status(400).json({message: 'Could not save task to the Database', error: err.errors})
+    // 200: success
+
+    // const person = new Person(req.body)
+    // const savedPerson = await person.save()
+    // the two lines above can be shorted 
+    const person = await new Person(req.body).save()
+    // res.json(savedPerson)
+    res.status(200).json(person)
+  
+  } catch (err) {
+    // 400: bad request
+    res.status(400).json({message:'Could not save person', errors: err.errors})
   }
 })
 
